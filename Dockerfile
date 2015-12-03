@@ -12,9 +12,26 @@ RUN apt-get install -y build-essential g++ curl libssl-dev apache2-utils git lib
 
 # ------------------------------------------------------------------------------
 # Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup | bash -
+RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
 RUN apt-get install -y nodejs
+RUN npm update npm -g
+RUN npm install bower -g
+RUN npm install grunt-cli -g
+
+RUN adduser --disabled-password --gecos "" cloud9user && \
+  echo "cloud9user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+ENV HOME /home/cloud9user
+
+
+# ------------------------------------------------------------------------------
+# Install yo
+RUN npm install yo -g
     
+# ------------------------------------------------------------------------------
+# Install yo generator angular 
+RUN npm install generator-karma -g
+RUN npm install generator-angular -g
+
 # ------------------------------------------------------------------------------
 # Install Cloud9
 RUN git clone https://github.com/c9/core.git /cloud9
@@ -40,6 +57,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Expose ports.
 EXPOSE 80
 EXPOSE 3000
+USER cloud9user
 
 # ------------------------------------------------------------------------------
 # Start supervisor, define default command.
