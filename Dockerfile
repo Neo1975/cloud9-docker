@@ -60,5 +60,5 @@ EXPOSE 3000
 
 # ------------------------------------------------------------------------------
 # Start supervisor, define default command.
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["sudo", "supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 USER cloud9user
