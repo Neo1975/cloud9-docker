@@ -57,8 +57,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Expose ports.
 EXPOSE 80
 EXPOSE 3000
-USER cloud9user
 
 # ------------------------------------------------------------------------------
 # Start supervisor, define default command.
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+USER cloud9user
