@@ -15,22 +15,34 @@ RUN apt-get install -y build-essential g++ curl libssl-dev apache2-utils git lib
 RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
 RUN apt-get install -y nodejs
 RUN npm update npm -g
-RUN npm install bower -g
-RUN npm install grunt-cli -g
-
-RUN adduser --disabled-password --gecos "" cloud9user && \
-  echo "cloud9user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-ENV HOME /home/cloud9user
-
 
 # ------------------------------------------------------------------------------
-# Install yo
-RUN npm install yo -g
+# Install yo bower grunt-cli
+RUN npm install -g yo bower grunt-cli
     
 # ------------------------------------------------------------------------------
 # Install yo generator angular 
 RUN npm install generator-karma -g
 RUN npm install generator-angular -g
+
+# ------------------------------------------------------------------------------
+# Create user cloud9user
+RUN adduser --disabled-password --gecos "" cloud9user && \
+  echo "cloud9user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+ENV HOME /home/cloud9user
+
+RUN mkdir /cloud9
+RUN chown cloud9user.cloud9user /cloud9
+RUN sudo chown -R cloud9user.cloud9user /home/cloud9user
+
+
+# ------------------------------------------------------------------------------
+# Add volumes
+RUN mkdir /workspace
+RUN chown -R cloud9user.cloud9user /workspace
+#VOLUME /workspace
+
+USER cloud9user
 
 # ------------------------------------------------------------------------------
 # Install Cloud9
@@ -45,17 +57,13 @@ RUN sed -i -e 's_127.0.0.1_0.0.0.0_g' /cloud9/configs/standalone.js
 ADD conf/cloud9.conf /etc/supervisor/conf.d/
 
 # ------------------------------------------------------------------------------
-# Add volumes
-RUN mkdir /workspace
-VOLUME /workspace
-
-# ------------------------------------------------------------------------------
 # Clean up APT when done.
+USER root
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # ------------------------------------------------------------------------------
 # Expose ports.
-EXPOSE 80
+EXPOSE 8080
 EXPOSE 3000
 
 # ------------------------------------------------------------------------------
