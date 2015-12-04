@@ -70,4 +70,4 @@ EXPOSE 3000
 # Start supervisor, define default command.
 CMD ["sudo", "supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 USER cloud9user
-git config --global url.http://.insteadOf git://
+RUN git config --global url.http://.insteadOf git://
