@@ -18,7 +18,7 @@ RUN npm update npm -g
 
 # ------------------------------------------------------------------------------
 # Install yo bower grunt-cli
-RUN npm install -g yo bower grunt-cli dpd
+RUN npm install -g yo bower grunt-cli deployd
     
 # ------------------------------------------------------------------------------
 # Install yo generator angular 
