@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------------------
 # Pull base image.
 FROM kdelfour/supervisor-docker
-MAINTAINER Kevin Delfour <kevin@delfour.eu>
+MAINTAINER Daniele Fornaciari <d.fornaciari@gmail.com>
 
 # ------------------------------------------------------------------------------
 # Install base
@@ -18,7 +18,7 @@ RUN npm update npm -g
 
 # ------------------------------------------------------------------------------
 # Install yo bower grunt-cli
-RUN npm install -g yo bower grunt-cli
+RUN npm install -g yo bower grunt-cli dpd
     
 # ------------------------------------------------------------------------------
 # Install yo generator angular 
@@ -40,6 +40,8 @@ RUN sudo chown -R cloud9user.cloud9user /home/cloud9user
 # Add volumes
 RUN mkdir /workspace
 RUN chown -R cloud9user.cloud9user /workspace
+RUN mkdir /deployd
+RUN chown -R cloud9user.cloud9user /deployd
 #VOLUME /workspace
 
 USER cloud9user
@@ -56,6 +58,13 @@ RUN sed -i -e 's_127.0.0.1_0.0.0.0_g' /cloud9/configs/standalone.js
 # Add supervisord conf
 ADD conf/cloud9.conf /etc/supervisor/conf.d/
 
+WORKDIR /deployd 
+RUN dpd create dpd 
+WORKDIR /deployd/dpd
+RUN dpd keygen 
+RUN dpd showkey
+RUN dpd -H ${MONGO_PORT_27017_TCP_ADDR} -P ${MONGO_PORT_27017_TCP_PORT} -n ${MONGO_PORT_27017_DB}
+
 # ------------------------------------------------------------------------------
 # Clean up APT when done.
 USER root
@@ -65,6 +74,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Expose ports.
 EXPOSE 8080
 EXPOSE 3000
+EXPOSE 2403
 
 # ------------------------------------------------------------------------------
 # Start supervisor, define default command.
