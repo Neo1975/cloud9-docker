@@ -59,7 +59,7 @@ RUN sed -i -e 's_127.0.0.1_0.0.0.0_g' /cloud9/configs/standalone.js
 ADD conf/cloud9.conf /etc/supervisor/conf.d/
 
 WORKDIR /deployd 
-#RUN dpd create dpd 
+RUN dpd create dpd 
 WORKDIR /deployd/dpd
 #RUN dpd keygen 
 #RUN dpd showkey
