@@ -76,6 +76,10 @@ EXPOSE 8080
 EXPOSE 3000
 EXPOSE 2403
 
+env MONGO_PORT_27017_TCP_ADDR localhost
+env MONGO_PORT_27017_TCP_PORT 27017
+env MONGO_PORT_27017_DB db
+
 # ------------------------------------------------------------------------------
 # Start supervisor, define default command.
 CMD ["sudo", "supervisord", "-c", "/etc/supervisor/supervisord.conf"]
